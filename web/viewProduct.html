@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container my-5">
+        <h1 class="text-center">Products</h1>
+        <div class="box d-flex flex-column justify-content-center align-items-center w-50 m-auto my-5">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Quntity</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="product-table-body">
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>AAA</td>
+                    <td>653</td>
+                    <td>BBB</td>
+                    <td>6</td>
+                    <td><div class="d-flex">
+                        <button type="button" class="btn mx-1 btn-primary">Update</button>
+                        <button type="button" class="btn mx-1 btn-info">Add Qty</button>
+                        <button type="button" class="btn mx-1 btn-danger">Delete</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>AAA</td>
+                    <td>653</td>
+                    <td>BBB</td>
+                    <td>6</td>
+                    <td><div class="d-flex">
+                        <button type="button" class="btn mx-1 btn-primary">Update</button>
+                        <button type="button" class="btn mx-1 btn-info">Add Qty</button>
+                        <button type="button" class="btn mx-1 btn-danger">Delete</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>AAA</td>
+                    <td>653</td>
+                    <td>BBB</td>
+                    <td>6</td>
+                    <td><div class="d-flex">
+                        <button type="button" class="btn mx-1 btn-primary">Update</button>
+                        <button type="button" class="btn mx-1 btn-info">Add Qty</button>
+                        <button type="button" class="btn mx-1 btn-danger">Delete</button>
+                    </div></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button type="button" onclick="window.location = 'homePage.html'" class="btn btn-primary mx-2">Back</button>
+
+        </div>
+    </div>
+    <div id="addQtyDialog" class="modal" style="display: none;">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Add Quantity</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="addQtyForm">
+                      <div class="mb-3">
+                          <label for="qty">Quantity</label>
+                          <input type="number" class="form-control" id="qty" name="qty" placeholder="Enter Quantity">
+                      </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="addQtySubmit">Add</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div id="updateProductDialog" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateProductForm">
+                    <div class="mb-3">
+                        <label for="updatedName">Product Name</label>
+                        <input type="text" class="form-control" id="updatedName" name="updatedName" placeholder="Enter Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updatedPrice">Product Price</label>
+                        <input type="text" class="form-control" id="updatedPrice" name="updatedPrice" placeholder="Enter Price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updatedBrand">Product Brand</label>
+                        <input type="text" class="form-control" id="updatedBrand" name="updatedBrand" placeholder="Enter Brand">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateProductSubmit">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+ <script src="/js/productScript.js"></script>
+  </body>
+</html>

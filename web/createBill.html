@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container my-5">
+            <h1 class="text-center">Create Bill</h1>
+            <div class="box d-flex flex-column justify-content-center align-items-center w-75 m-auto my-5">
+                <div class="c-box w-100 d-flex justify-content-between">
+
+                    <div class="mx-3 w-50">
+                        <label for="exampleFormControlInput1" class="form-label" >Enter Mobile No</label>
+                        <input type="text" class="form-control" id="mobileNumber" placeholder="Mobile No">
+                    </div>
+                    <div class="mx-3 w-75">
+                        <label for="customerName" class="form-label">Customer Name</label>
+                        <input type="text" class="form-control" id="customerName" placeholder="Name" disabled>
+                    </div>
+
+                    <div class="mx-3 w-50">
+                        <label for="customerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="customerAddress" placeholder="Address"
+                            disabled>
+                    </div>
+
+                </div>
+
+                <div class="c-box my-4 w-100 d-flex justify-content-between">
+
+                    <div class="mx-3 w-50">
+                        <label for="exampleFormControlInput1" class="form-label">Product Name</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Select Product</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="mx-3 ">
+                        <label for="exampleFormControlInput1" class="form-label">Qty</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" placeholder="Qty">
+                    </div>
+                    <div class="mx-3 d-flex flex-column">
+                        <label for="exampleFormControlInput1" class="form-label invisible">n </label>
+
+                        <button type="button" class="btn btn-primary">Add Product</button>
+
+                    </div>
+
+                </div>
+
+                <div class="t-con w-100">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Brand</th>
+                                <th scope="col">Quntity</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>AAA</td>
+                                <td>653</td>
+                                <td>BBB</td>
+                                <td>6</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn mx-1 btn-danger">Remove</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>AAA</td>
+                                <td>653</td>
+                                <td>BBB</td>
+                                <td>6</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn mx-1 btn-danger">Remove</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>AAA</td>
+                                <td>653</td>
+                                <td>BBB</td>
+                                <td>6</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button type="button" class="btn mx-1 btn-danger">Remove</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary mx-2">Add</button>
+                        <button type="button" class="btn btn-danger mx-2">Clear</button>
+                        <button type="button" onclick="window.location = 'homePage.html'"
+                            class="btn btn-warning mx-2">Back</button>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+        <script src="js/billScript.js"></script>
+</body>
+
+</html>
