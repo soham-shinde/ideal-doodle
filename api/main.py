@@ -1,3 +1,5 @@
+import datetime
+
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException
 from fastapi.params import Query
@@ -88,13 +90,33 @@ def get_customer_details(cust_id: str):
 
 
 # View purchase history for a customer
-@app.get("/users/purchase-history/{user_id}", response_model=List[PaymentModel])
+@app.get("/users/purchase-history/{user_id}")
 def see_purchase_history(user_id: str):
-    payments = list(payment_collection.find({"cust_id": user_id}))
+    payments = list(payment_collection.find({"id": user_id}))
+    for p in payments:
+        p['_id'] = str(p['_id'])
     return payments
 
 
 # ******* Product ***********
+@app.get("/products/{product_id}")
+def read_product(product_id: str):
+    try:
+        # Convert the product_id to ObjectId
+        product_object_id = ObjectId(product_id)
+
+        # Retrieve the product from MongoDB by its ID
+        product = product_collection.find_one({"_id": product_object_id})
+
+        if product is not None:
+            # Return the product as JSON respons
+            product['_id'] = str(product['_id'])
+            return product
+        else:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/product/getList")
 def get_product_list():
@@ -155,14 +177,17 @@ def add_product_quantity(storage:Storage):
 # API Routes
 @app.post("/payment/create", response_model=PaymentModel)
 def create_payment(payment: PaymentModel):
-    payment_data = payment.dict()
+    payment_data = payment.model_dump()
+    payment_data['date'] = str(datetime.datetime.now().date())
     payment_id = payment_collection.insert_one(payment_data).inserted_id
     payment_data["id"] = str(payment_id)
     return payment_data
 
-@app.get("/payment/getList", response_model=List[PaymentModel])
+@app.get("/payment/getList")
 def get_all_payments():
     payments = list(payment_collection.find())
+    for p in payments:
+        p['_id'] = str(p['_id'])
     return payments
 
 @app.get("/payment/getOne/{payment_id}", response_model=PaymentModel)
