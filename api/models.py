@@ -28,8 +28,7 @@ class ProductItem(BaseModel):
 
 
 class PaymentModel(BaseModel):
-    id: str
-    cust_id: str
+    id: Union[str, None] = None
     pay_amount: float
     prod: List[ProductItem]
 

@@ -19,7 +19,7 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
         console.log(email,password);
         if (response.status === 200) {
           
-            window.location.href = "/homePage.html";
+            window.location.href = "homePage.html";
         } else {
            
             console.error("Login failed");

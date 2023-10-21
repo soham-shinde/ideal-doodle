@@ -1,59 +1,82 @@
 const mobileNumberInput = document.getElementById("mobileNumber");
-mobileNumberInput.addEventListener("input", fetchCustomerDetails);
+// mobileNumberInput.addEventListener("input", fetchCustomerDetails);
 
 
-function fetchCustomerDetails() {
-    const mobileNo = document.getElementById("mobileNumber").value;
-    if (mobileNo) {
-        // Make an API request to fetch customer details by mobile number
-        fetch(`http://127.0.0.1:8000/api/customer/${mobileNo}`)
-            .then((response) => response.json())
-            .then((data) => {
-                // Populate customer name and address fields
-                document.getElementById("customerName").value = data.cust_name;
-                document.getElementById("customerAddress").value = data.cust_address;
-            })
-            .catch((error) => {
-                console.error("API request failed:", error);
-            });
-    }
-}
+fetchProductList();
+
+let productList = []
 
 // Function to add a product to the bill
 function addProductToBill() {
-    const productName = document.getElementById("productSelect").value;
-    const productQty = document.getElementById("productQty").value;
+    const productId = document.getElementById("productSelect").value;
+    const productQty = document.getElementById("product-qty").value;
 
-    if (productName !== "Select Product" && productQty > 0) {
-        // Add the product to the table
-        const table = document.querySelector("table tbody");
-        const newRow = table.insertRow(table.rows.length);
-        newRow.innerHTML = `
-            <td>${table.rows.length}</td>
-            <td>${productName}</td>
-            <td>${productPrice}</td>  // Add the price based on the product
-            <td>${productBrand}</td>  // Add the brand based on the product
-            <td>${productQty}</td>
-            <td><button type="button" class="btn mx-1 btn-danger" onclick="removeProduct(this)">Remove</button></td>
-        `;
 
-        // Clear the product selection and quantity fields
-        document.getElementById("productSelect").value = "Select Product";
-        document.getElementById("productQty").value = "";
+    if (productId !== "Select Product" && productQty > 0) {
+        fetch(`http://127.0.0.1:8000/products/${productId}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    console.error('Error fetching product list');
+                }
+            })
+            .then((data) => {
+                if (data) {
+                    productList.push({
+                        "_id": data._id,
+                        "p_name": data.p_name,
+                        'p_price': data.p_price,
+                        "p_brand": data.p_brand,
+                        "productQty": productQty,
+                        "totalAmount": Number(data.p_price) * Number(productQty)
+                    })
+                    renderProductList()
+                    // Clear the product selection and quantity fields
+                    document.getElementById("productSelect").value = "Select Product";
+                    document.getElementById("product-qty").value = "0";
+                }
+            })
+            .catch((error) => {
+                console.error('API request failed:', error);
+            });
+
+
     }
 }
 
-// Function to remove a product from the bill
-function removeProduct(button) {
-    const row = button.parentNode.parentNode;
-    const table = row.parentNode;
-    table.deleteRow(row.rowIndex);
+function renderProductList(params) {
+    const table = document.querySelector("table tbody");
+    console.log(table);
+    table.innerHTML = '';
+    let totalAmount = 0;
+    productList.forEach(element => {
+        totalAmount += Number(element.totalAmount)
+        const newRow = table.insertRow(table.rows.length);
+        newRow.innerHTML = `
+                    <td>${table.rows.length}</td>
+                    <td>${element.p_name}</td>
+                    <td>${element.p_price}</td>  
+                    <td>${element.p_brand}</td>  
+                    <td>${element.productQty}</td>
+                    <td>${element.totalAmount}</td>
+                    <td><button type="button" class="btn mx-1 btn-danger" onclick="removeProduct('${element._id}')">Remove</button></td>
+                `;
+    });
+    document.getElementById('total').textContent = totalAmount;
+
+}
+
+function removeProduct(id) {
+    console.log(id);
+    productList = productList.filter((item) => { return item._id != id })
+    renderProductList()
 }
 
 // Function to calculate the total amount
 function calculateTotalAmount() {
     const rows = document.querySelectorAll("table tbody tr");
-    let totalAmount = 0;
+
     rows.forEach((row) => {
         const price = parseFloat(row.cells[2].textContent);
         const quantity = parseInt(row.cells[4].textContent);
@@ -66,33 +89,26 @@ function calculateTotalAmount() {
 
 // Function to submit the bill
 function submitBill() {
-    // Collect customer details, product details, and total amount from the form
+    const id = document.getElementById("custId").value;
+    const totalAmount = parseFloat(document.getElementById("total").textContent);
 
-    const mobileNo = document.getElementById("exampleFormControlInput1").value;
-    const customerName = document.getElementById("customerName").value;
-    const customerAddress = document.getElementById("customerAddress").value;
-    const products = [];
-
-    const rows = document.querySelectorAll("table tbody tr");
-    rows.forEach((row) => {
-        const productName = row.cells[1].textContent;
-        const quantity = parseInt(row.cells[4].textContent);
-        products.push({ productName, quantity });
+    let products = [];
+    productList.forEach(element => {
+        products.push({
+            "prod_id": element._id,
+            "prod_name": element.p_name,
+            "prod_price": element.totalAmount,
+            "prod_quantity": element.productQty
+        })
     });
-
-    const totalAmount = parseFloat(document.getElementById("totalAmount").textContent);
-
-    // Create a bill object
     const bill = {
-        mobileNo,
-        customerName,
-        customerAddress,
-        products,
-        totalAmount,
+            "id": id,
+            "pay_amount": totalAmount,
+            "prod": products
     };
 
     // Make an API request to submit the bill
-    fetch("/api/create-bill", {
+    fetch("http://127.0.0.1:8000/payment/create", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -114,36 +130,36 @@ function submitBill() {
 }
 
 function clearForm() {
-    document.getElementById("exampleFormControlInput1").value = "";
+    // document.getElementById("exampleFormControlInput1").value = "";
     document.getElementById("customerName").value = "";
     document.getElementById("customerAddress").value = "";
     document.getElementById("productSelect").value = "Select Product";
-    document.getElementById("productQty").value = "";
+    document.getElementById("product-qty").value = "";
     document.querySelector("table tbody").innerHTML = "";
-    document.getElementById("totalAmount").textContent = "0";
+    document.getElementById("total").textContent = "0";
 }
 
+clearForm()
+
+
 function fetchProductList() {
-    // Make an API request to get the list of products
-    fetch('/api/get-product-list') // Replace with the actual API endpoint
+    fetch('http://127.0.0.1:8000/product/getList')
         .then((response) => {
             if (response.status === 200) {
-                return response.json(); // Parse the JSON response
+                return response.json();
             } else {
                 console.error('Error fetching product list');
             }
         })
         .then((data) => {
-            // Handle the product list data here
             if (data) {
-                // Iterate through the list and populate your product dropdown/select element
-                const productSelect = document.querySelector('#productSelect'); // Adjust the selector
-                productSelect.innerHTML = ''; // Clear existing options
-
+                const productSelect = document.querySelector('#productSelect');
+                productSelect.innerHTML = '<option selected>Select Product</option>';
+                console.log(data);
                 data.forEach((product) => {
                     const option = document.createElement('option');
-                    option.value = product.prod_id;
-                    option.textContent = product.prod_name;
+                    option.value = product._id;
+                    option.textContent = product.p_name;
                     productSelect.appendChild(option);
                 });
             }
@@ -153,4 +169,43 @@ function fetchProductList() {
         });
 }
 
-fetchProductList();
+
+
+async function searchUsers() {
+    const mobileNumber = document.getElementById("mobileNumber").value;
+    const userDropdown = document.getElementById("userDropdown");
+
+    userDropdown.innerHTML = "";
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/customer/getList`);
+        const users = await response.json();
+
+        const filteredUsers = users.filter(user => user.cust_mobile_no.toLowerCase().includes(mobileNumber.toLowerCase()));
+        filteredUsers.forEach(user => {
+            const userItem = document.createElement("div");
+            userItem.className = "dropdown-item";
+            userItem.textContent = user.cust_name;
+
+            userItem.addEventListener("click", () => {
+                document.getElementById("custId").value = user._id;
+
+                document.getElementById("mobileNumber").value = user.cust_mobile_no;
+                document.getElementById("customerName").value = user.cust_name;
+                document.getElementById("customerAddress").value = user.cust_address;
+                userDropdown.innerHTML = "";
+            });
+
+            userDropdown.appendChild(userItem);
+        });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+}
+
+document.addEventListener("click", function (e) {
+    if (!e.target.matches(".form-control")) {
+        const userDropdown = document.getElementById("userDropdown");
+        userDropdown.innerHTML = "";
+    }
+});
+

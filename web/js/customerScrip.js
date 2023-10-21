@@ -79,17 +79,17 @@ function showCustomerHistory(custId) {
     fetch(`http://127.0.0.1:8000/users/purchase-history/${custId}`) 
         .then((response) => response.json())
         .then((data) => {
+            console.log(data);
             const customerHistoryList = document.getElementById("customerHistoryList");
             customerHistoryList.innerHTML = "";
             data.forEach((purchase, index) => {
                 const listItem = document.createElement("li");
                 listItem.className = "list-group-item";
                 listItem.innerHTML = `
-            <strong>Order ID:</strong> ${purchase.order_id}<br>
-            <strong>Date:</strong> ${purchase.purchase_date}<br>
-            <strong>Product:</strong> ${purchase.product_name}<br>
-            <strong>Quantity:</strong> ${purchase.quantity}<br>
-            <strong>Total Amount:</strong> ${purchase.total_amount}<br>
+            <strong>Order ID:</strong> ${purchase.id}<br>
+            <strong>Date:</strong> ${purchase.date}<br>
+            <strong>Quantity:</strong> ${purchase.prod.length}<br>
+            <strong>Total Amount:</strong> ${purchase.pay_amount}<br>
         `;
                 customerHistoryList.appendChild(listItem);
             });
